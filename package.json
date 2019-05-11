@@ -1,0 +1,25 @@
+{
+  "name": "vidly-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "author": "Nat",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/joi": "^15.0.0",
+    "config": "^3.1.0",
+    "debug": "^4.1.1",
+    "express": "^4.16.4",
+    "helmet": "^3.16.0",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.19.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2"
+  }
+}
