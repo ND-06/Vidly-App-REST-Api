@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const auth = (req, res, next) => {
-  console.log("Authenticating...");
+  console.log('Authenticating...');
   next();
 };
 

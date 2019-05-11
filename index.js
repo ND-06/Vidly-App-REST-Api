@@ -8,9 +8,7 @@ const Joi = require('@hapi/joi');
 const express = require('express');
 const logger = require('./logger');
 const genres = require('./routes/genres');
-const auth = require('./authenticate')
-
-
+const auth = require('./authenticate');
 
 const app = express();
 
