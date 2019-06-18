@@ -1,5 +1,6 @@
 const log = (req, res, next) => {
-  console.log("Logging...");
+  // eslint-disable-next-line no-console
+  console.log('Logging...');
   next();
 };
 
