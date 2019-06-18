@@ -5,35 +5,16 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Joi = require('@hapi/joi');
 
+// we import our validateGenre function
+// and our Genre class function from our genre model
+// we use destructuring in order to load at the same time
+// validate function and Genre class
+
+const { Genre, validate } = require('../models/genre');
+
 const router = express.Router();
 
 // Create a schema
-
-const genreSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minlength: 4,
-    maxlength: 50
-  }
-});
-
-// Create a model for genre for the Database
-const Genre = mongoose.model('Genre', genreSchema);
-// const genres = [
-//  { id: 1, name: 'Action' },
-//  { id: 2, name: 'Horror' },
-//  { id: 3, name: 'Drama' }
-// ];
-
-const validateGenre = genre => {
-  const schema = {
-    // eslint-disable-next-line no-undef
-    name: Joi.string().min(3)
-  };
-  // eslint-disable-next-line no-undef
-  return Joi.validate(genre, schema);
-};
 
 // Get all Genres
 router.get('/', async (req, res) => {
@@ -54,7 +35,7 @@ router.get('/:id', async (req, res) => {
 // Create a new genre
 
 router.post('/', async (req, res) => {
-  const result = validateGenre(req.body);
+  const result = validate(req.body);
   if (result.error) res.status(400).send(result.details[0].message);
   let genre = new Genre({
     name: req.body.name
@@ -66,7 +47,7 @@ router.post('/', async (req, res) => {
 // Modify a genre
 
 router.put('/:id', async (req, res) => {
-  const result = validateGenre(req.body);
+  const result = validate(req.body);
   if (result.error) res.status(400).send(result.details[0].message);
   // findByIdAndUpdate is much more efficient than query approach
   const genre = await Genre.findByIdAndUpdate(req.params.id, {
