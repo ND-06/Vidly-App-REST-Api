@@ -13,6 +13,7 @@ const genreSchema = new mongoose.Schema({
 // Create a genre model for the Database
 const Genre = mongoose.model('Genre', genreSchema);
 
+// Create a Joi schema for Genre validation
 const validateGenre = genre => {
   const schema = {
     // eslint-disable-next-line no-undef
@@ -22,7 +23,8 @@ const validateGenre = genre => {
   return Joi.validate(genre, schema);
 };
 
-// We export Genre class and validateGenre function ( we have shortened validateGenre
+// We export Genre class , genreSchema, and validateGenre function ( we have shortened validateGenre
 // name to validate)
+module.exports.genreSchema = genreSchema;
 module.exports.Genre = Genre;
 module.exports.validate = validateGenre;

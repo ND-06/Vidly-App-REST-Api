@@ -11,6 +11,7 @@ const homepage = require('./routes/homepage');
 const logger = require('./middleware/logger');
 const genres = require('./routes/genres');
 const customers = require('./routes/customers');
+const movies = require('./routes/movies');
 const auth = require('./middleware/authenticate');
 
 const app = express();
@@ -45,6 +46,7 @@ app.use(logger, auth);
 app.use('/api/genres', genres);
 app.use('/', homepage);
 app.use('/api/customers', customers);
+app.use('/api/movies', movies);
 
 // Get the HomePage of Vidly APP
 app.get('/', (req, res) => {
