@@ -2,55 +2,91 @@
 const Joi = require('@hapi/joi');
 const mongoose = require('mongoose');
 const { genreSchema } = require('./genre');
-// First we have to create moviesSchema, and each movie have to be related
-// to a genre
 
-const moviesSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-    minlength: 5,
-    maxlength: 255,
-    trim: true
-  },
-  numberInStock: {
-    type: Number,
-    required: true,
-    min: 0,
-    max: 255
-  },
-  dailyRentalRate: {
-    type: Number,
-    required: true,
-    min: 0,
-    max: 255
-  },
-  genre: {
-    type: genreSchema,
-    required: true
-  }
-});
+// First we have to create a model and a Schema for Movies with different properties
 
-const Movie = mongoose.model('Movie', moviesSchema);
+const Movie = mongoose.model(
+  'Movies',
+  new mongoose.Schema({
+    title: {
+      type: String,
+      required: true,
+      minlength: 3,
+      maxlength: 255,
+      trim: true
+    },
+    director: {
+      type: String,
+      required: true,
+      minlength: 3,
+      maxlength: 255
+    },
+    genre: {
+      type: genreSchema,
+      required: true
+    },
+    dateOfRelease: {
+      type: Number,
+      required: true,
+      min: 1850,
+      max: 2020
+    },
+    budgetInUsd: {
+      type: Number,
+      required: false,
+      min: 0,
+      max: 10000000000
+    },
+    nationality: {
+      type: String,
+      trim: true,
+      minlength: 2,
+      maxlength: 30
+    },
+    rate: {
+      type: Number,
+      min: 0,
+      max: 20,
+      required: true
+    },
+    actors: [String]
+  })
+);
+
+// Then we have to create Joi validator function
 
 function validateMovie(movie) {
   const schema = {
     title: Joi.string()
-      .min(5)
+      .required()
+      .min(3)
+      .max(255),
+    director: Joi.string()
+      .min(3)
       .max(255)
       .required(),
+    dateOfRelease: Joi.number()
+      .required()
+      .min(1850)
+      .max(2020),
+    budgetInUsd: Joi.number()
+      .min(0)
+      .max(10000000000),
+    nationality: Joi.string()
+      .required()
+      .min(2)
+      .max(30),
+    rate: Joi.number()
+      .required()
+      .min(0)
+      .max(20),
     genreId: Joi.string().required(),
-    numberInStock: Joi.number()
-      .min(0)
-      .required(),
-    dailyRentalRate: Joi.number()
-      .min(0)
+    actors: Joi.array()
+      .items(Joi.string())
       .required()
   };
-
   return Joi.validate(movie, schema);
 }
 
-// eslint-disable-next-line no-undef
 module.exports.Movie = Movie;
 module.exports.validate = validateMovie;

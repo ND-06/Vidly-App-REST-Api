@@ -10,8 +10,8 @@ const express = require('express');
 const homepage = require('./routes/homepage');
 const logger = require('./middleware/logger');
 const genres = require('./routes/genres');
-const customers = require('./routes/customers');
 const movies = require('./routes/movies');
+const customers = require('./routes/customers');
 const auth = require('./middleware/authenticate');
 
 const app = express();
