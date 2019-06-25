@@ -12,6 +12,7 @@ const logger = require('./middleware/logger');
 const genres = require('./routes/genres');
 const movies = require('./routes/movies');
 const customers = require('./routes/customers');
+const rentals = require('./routes/rentals');
 const auth = require('./middleware/authenticate');
 
 const app = express();
@@ -42,11 +43,12 @@ app.use(express.static('public'));
 app.use(logger, auth);
 
 // We are telling to express that for any routes with this endpoint ,
-// use the router ('genres' module)
+// use the router
 app.use('/api/genres', genres);
 app.use('/', homepage);
 app.use('/api/customers', customers);
 app.use('/api/movies', movies);
+app.use('/api/rentals', rentals);
 
 // Get the HomePage of Vidly APP
 app.get('/', (req, res) => {

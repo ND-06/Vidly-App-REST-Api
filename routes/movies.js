@@ -59,6 +59,8 @@ router.post('/', async (req, res) => {
     nationality: req.body.nationality,
     director: req.body.director,
     rate: req.body.rate,
+    dailyRentalPriceInUsd: req.body.dailyRentalPriceInUsd,
+    numberInStock: req.body.numberInStock,
     actors: req.body.actors
   });
   movie = await movie.save();
@@ -88,6 +90,8 @@ router.put('/:id', async (req, res) => {
       nationality: req.body.nationality,
       director: req.body.director,
       rate: req.body.rate,
+      dailyRentalPriceInUsd: req.body.dailyRentalPriceInUsd,
+      numberInStock: req.body.numberInStock,
       actors: req.body.actors
     },
     { new: true }

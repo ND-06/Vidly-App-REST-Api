@@ -49,6 +49,17 @@ const Movie = mongoose.model(
       max: 20,
       required: true
     },
+    dailyRentalPriceInUsd: {
+      type: Number,
+      min: 1,
+      max: 15
+    },
+    numberInStock: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 100
+    },
     actors: [String]
   })
 );
@@ -81,6 +92,13 @@ function validateMovie(movie) {
       .min(0)
       .max(20),
     genreId: Joi.string().required(),
+    dailyRentalPriceInUsd: Joi.number()
+      .min(1)
+      .max(15),
+    numberInStock: Joi.number()
+      .required()
+      .min(0)
+      .max(100),
     actors: Joi.array()
       .items(Joi.string())
       .required()
