@@ -47,8 +47,7 @@ const Rental = mongoose.model(
         min: 1,
         max: 50,
         required: true
-      },
-      required: true
+      }
     },
     dateOut: {
       type: Date,

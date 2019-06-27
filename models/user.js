@@ -7,23 +7,22 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    minlength: 4,
-    maxlength: 255,
-    unique: true,
-    required: true
+    required: true,
+    minlength: 5,
+    maxlength: 50
   },
   email: {
     type: String,
+    required: true,
     minlength: 5,
     maxlength: 255,
-    unique: true,
-    required: true
+    unique: true
   },
   password: {
     type: String,
-    minlength: 8,
-    maxlength: 255,
-    required: true
+    required: true,
+    minlength: 5,
+    maxlength: 1024
   }
 });
 
@@ -36,8 +35,8 @@ const User = mongoose.model('User', userSchema);
 function validateUser(user) {
   const schema = {
     name: Joi.string()
-      .min(4)
-      .max(255)
+      .min(5)
+      .max(50)
       .required(),
     email: Joi.string()
       .min(5)
@@ -45,11 +44,11 @@ function validateUser(user) {
       .required()
       .email(),
     password: Joi.string()
-      .min(8)
+      .min(5)
       .max(255)
       .required()
   };
-  return Joi.validate(schema, user);
+  return Joi.validate(user, schema);
 }
 
 // export modules
