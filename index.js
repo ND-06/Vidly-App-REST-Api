@@ -7,6 +7,7 @@ const helmet = require('helmet');
 // eslint-disable-next-line no-unused-vars
 const Joi = require('@hapi/joi');
 const express = require('express');
+const auth = require('./routes/auth');
 const homepage = require('./routes/homepage');
 const logger = require('./middleware/logger');
 const genres = require('./routes/genres');
@@ -14,7 +15,6 @@ const movies = require('./routes/movies');
 const users = require('./routes/users');
 const customers = require('./routes/customers');
 const rentals = require('./routes/rentals');
-const auth = require('./middleware/authenticate');
 
 const app = express();
 
@@ -41,12 +41,13 @@ app.use(express.json());
 app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
-app.use(logger, auth);
+app.use(logger);
 
 // We are telling to express that for any routes with this endpoint ,
 // use the router
 app.use('/api/genres', genres);
 app.use('/', homepage);
+app.use('/api/auth', auth);
 app.use('/api/customers', customers);
 app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
