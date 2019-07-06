@@ -8,9 +8,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
+const auth = require('../middleware/auth');
 const { User, validate } = require('../models/user');
 
 const router = express.Router();
+
+// Get the current user
+
+router.get('/me', auth, async (req, res) => {
+  // we dont want to return the password to the client so we use select("-password")
+  const user = await User.findById(req.user._id).select('-password');
+  res.send(user);
+});
 
 // Create a User in DB
 

@@ -4,6 +4,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Joi = require('@hapi/joi');
+const auth = require('../middleware/auth');
 
 // we import our validateGenre function
 // and our Genre class function from our genre model
@@ -36,7 +37,20 @@ router.get('/:id', async (req, res) => {
 
 // Create a new genre
 
-router.post('/', async (req, res) => {
+// we want only registered users ( those with jsonwebtokens) have the capability
+// to post a new genre
+// for this, we have to use a middleware
+
+// we add as second argument the middleware function auth to prevent unregistered
+// users to have access to post a new genre
+router.post('/', auth, async (req, res) => {
+  const token = res.header('x-auth-token');
+  // If user doesnt have a token, and so is not registered , we send a 401 error
+  // thats means the user doesnt have required crendentials to post a new genre
+  res
+    .status(401)
+    .send('You have to be registered to post a new genre. No token found');
+
   const result = validate(req.body);
   if (result.error) return res.status(404).send(result.details[0].message);
   let genre = new Genre({
