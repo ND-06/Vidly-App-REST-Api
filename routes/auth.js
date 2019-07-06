@@ -3,10 +3,8 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-vars */
-const config = require('config');
 const express = require('express');
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const Joi = require('@hapi/joi');
 const bcrypt = require('bcrypt');
@@ -82,7 +80,7 @@ router.post('/', async (req, res) => {
   // the object that we want to work with, and as second , third etc arguments, the properties
   // selected => so we will get a new object with theses 3 properties (_id, email and name)
 
-  res.status(200).send(_.pick(user, ['_id', 'name', 'email']));
+  //  res.status(200).send(_.pick(user, ['_id', 'name', 'email']));
 });
 
 function validate(req) {

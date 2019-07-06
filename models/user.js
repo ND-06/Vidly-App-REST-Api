@@ -1,6 +1,9 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 const Joi = require('@hapi/joi');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
 // Create a User schema
 
@@ -26,9 +29,13 @@ const userSchema = new mongoose.Schema({
   }
 });
 
+// we want to add to this schema a Method to create a function in order to generate token
+// eslint-disable-next-line func-names
 userSchema.methods.generateAuthToken = function() {
   const token = jwt.sign({ _id: this._id }, config.get('jwtPrivateKey'));
+  return token;
 };
+
 // create a User model
 
 const User = mongoose.model('User', userSchema);
