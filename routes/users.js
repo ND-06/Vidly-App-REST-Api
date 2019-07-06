@@ -2,11 +2,13 @@
 /* eslint-disable no-undef */
 /* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
+const jwt = require('jsonwebtoken');
+const config = require('config');
 const express = require('express');
 const mongoose = require('mongoose');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
-const { validate, User } = require('../models/user');
+const { User, validate } = require('../models/user');
 
 const router = express.Router();
 
@@ -39,6 +41,21 @@ router.post('/', async (req, res) => {
   user.password = await bcrypt.hash(user.password, salt);
   // save user in our DB with properly hashed password
   user = await user.save();
+  // we create a token variable , inside , we use sign method of jwt,
+  // first we need to pass the user id as identifier, and then
+  // we call the get method of config to call our privatekey which stored
+  // in our config folder, its name is jwtPrivateKey
+
+  const token = user.generateAuthToken();
+  // const token = jwt.sign({ _id: user._id }, config.get('jwtPrivateKey'));
+  // A better approach is to return the jsonwebtoken into a http header
+  // we have header in request , but also hearder in response
+  // so we use res.header ( and for custom reader, as first argument, we need
+  // to write x-auth-token, and as second argument the value
+  //  which is in our case the token)
+  res
+    .header('x-auth-token', token)
+    .send(_.pick(user, ['_id', 'name', 'email']));
 
   // 2 methods to control our response to the client :
 

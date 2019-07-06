@@ -19,8 +19,18 @@ const rentals = require('./routes/rentals');
 const app = express();
 
 // To detect in which environnement the app is running
-console.log(`Application Name: ${config.get('name')}`);
-console.log(`Mail Server: ${config.get('mail.host')}`);
+// console.log(`Application Name: ${config.get('name')}`);
+// console.log(`Mail Server: ${config.get('mail.host')}`);
+
+if (!config.get('jwtPrivateKey')) {
+  console.log('Fatal Error : JWT Private Key is not defined !');
+  // and then we need to exit process
+  process.exit(0);
+  // 0 means success, anything other than 0 means failure
+  // process.exit(1) is for exit the process in case of error
+  // when jwtprivatekey is not defined , node doesnt respond to any request received from clients
+}
+
 // Use
 if (app.get('env') === 'development') {
   app.use(morgan('tiny'));

@@ -1,8 +1,12 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable consistent-return */
 /* eslint-disable no-undef */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-vars */
+const config = require('config');
 const express = require('express');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const Joi = require('@hapi/joi');
 const bcrypt = require('bcrypt');
@@ -20,7 +24,7 @@ router.post('/', async (req, res) => {
   // email ( so we define another validate function at the bottom of
   // the file)
 
-  const { error } = validate(req);
+  const { error } = validate(req.body);
   if (error) {
     return res.status(400).send('Password is not valid !');
   }
@@ -36,7 +40,32 @@ router.post('/', async (req, res) => {
 
   const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (!validPassword) return res.status(400).send('Invalid Email or Password');
-  res.send(true);
+
+  // JWT (jsonwebtoken) , we create a variable and inside we use , with jsonwebtoken, the sign
+  // method : As Payload : as first argument ,  we put an
+  // object with one property ( user._id in our case)
+  // and as second argument we pass also the private key ( here , its hardocoded, but obviously
+  // in real app, we cannot put the private key in our code source ^_^)
+  // the private key is used to create the digital signature ( we can use any string obviously)
+
+  // const token = jwt.sign({ _id: user._id }, config.get('jwtPrivateKey'));
+
+  // but thats a bad way of code, because if we want to add more properties one day,
+  // it will be less readable and we will have to
+  // make the same modification maybe in several places .
+  // So we have just to create a method which generate token ( this method
+  // has been added directly in user model , just after the userSchema)
+
+  const token = user.generateAuthToken();
+
+  // When the user logs in , it will generate a jsonwebtoken , and this token
+  // will be returned in the body of the response
+  // Then we have to call config.get and pass the name of the application settings ( in our config folder )
+  // thats allows us to not display the jwtPrivateKey in our source code
+  // so the actual secret will be in our custom environnement variable , in config folder
+
+  // finally we can return this token to the client
+  res.send(token);
 
   // 2 methods to control our response to the client :
 
@@ -68,7 +97,7 @@ function validate(req) {
       .max(255)
       .required()
   };
-  return Joi.validate(user, schema);
+  return Joi.validate(req, schema);
 }
 
 module.exports = router;
