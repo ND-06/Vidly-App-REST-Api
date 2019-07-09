@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 const Joi = require('@hapi/joi');
@@ -26,18 +27,26 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 5,
     maxlength: 1024
-  }
+  },
+  isAdmin: Boolean
 });
 
 // we want to add to this schema a Method to create a function in order to generate token
 // eslint-disable-next-line func-names
+// we also want to add , in our payload , isAdmin property , to generate directly in the payload
+// this information
 userSchema.methods.generateAuthToken = function() {
-  const token = jwt.sign({ _id: this._id }, config.get('jwtPrivateKey'));
+  const token = jwt.sign(
+    { _id: this._id, isAdmin: this.isAdmin },
+    config.get('jwtPrivateKey')
+  );
   return token;
 };
 
-// create a User model
+// So we need a new middleware function ( to add in middleware folder of our app )
+// to check if the user is an admin or not
 
+// create a User model
 const User = mongoose.model('User', userSchema);
 
 // create a validate function for User

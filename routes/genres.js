@@ -5,6 +5,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Joi = require('@hapi/joi');
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 // we import our validateGenre function
 // and our Genre class function from our genre model
@@ -73,8 +74,11 @@ router.put('/:id', async (req, res) => {
 
 // Delete a genre
 
-router.delete('/:id', (req, res) => {
-  const genre = Genre.findByIdAndRemove(req.params.id);
+// ( we use 2 customs middlewares, the first to check if the user sends a valid json web token,
+// and if it is ok , the second middleware checks if the user is admin or not.
+// If he is admin, so the last middleware allows the user to delete genre : req / res)
+router.delete('/:id', [auth, admin], async (req, res) => {
+  const genre = await Genre.findByIdAndRemove(req.params.id);
   // If genre doesnt have an existing ID, it will return a 404 status - Not found
   if (!genre)
     // If genre has an id , it will send to the client a 200 status ( Ok Status ) and
